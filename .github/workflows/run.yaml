@@ -28,16 +28,13 @@ jobs:
     - run: pip install -r requirements.txt
 
     - name: run the script
-      run: python3 monitor.py
+      run: |
+        python3 monitor.py; cd outputs; cat *txt | parallel ../git_clone_repo_within_user_dir.sh
         
       env:
         WEBHOOK: ${{ secrets.WEBHOOK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         QUERIES_JSON: ${{ secrets.QUERIES_JSON }}
-
-    - name: download repos
-      run: |
-        cd outputs; cat *txt | parallel ../git_clone_repo_within_user_dir.sh
 
     - name: create archive
       run: tar czf outputs.tgz outputs
