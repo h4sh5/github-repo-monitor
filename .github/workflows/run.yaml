@@ -1,0 +1,48 @@
+
+name: Run the bot
+
+on: 
+  #push 
+  workflow_dispatch: # this is a nice option that will enable a button w/ inputs
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)    
+        required: false
+  schedule:
+    - cron:  '0 */2 * * *'
+
+
+jobs:
+  run-job:
+    runs-on: ubuntu-latest
+    steps:
+    - run: apt install parallel
+    - run: touch ~/.parallel/will-cite
+    - name: checkout repo content
+      uses: actions/checkout@v2 # checkout the repository content to github runner.
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13' 
+
+        
+    - name: run the script
+      run: python3 monitor.py
+        
+      env:
+        WEBHOOK: ${{ secrets.WEBHOOK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        QUERIES_JSON: ${{ secrets.QUERIES_JSON }}
+
+    - name: download repos
+      run: |
+        cd outputs; cat *txt | parallel ../git_clone_repo_within_user_dir.sh
+
+    - name: create archive
+      run: tar czf outputs.tgz outputs
+
+    - name: upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: outputs.tgz
+        path: outputs.tgz
+
