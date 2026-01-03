@@ -18,13 +18,15 @@ jobs:
     steps:
     - run: sudo apt install parallel -y 
     - run: mkdir ~/.parallel ; touch ~/.parallel/will-cite
+
+    - name: checkout repo content
+      uses: actions/checkout@v6
+
     - uses: actions/setup-python@v6
       with:
         python-version: '3.13'
         cache: 'pip'
 
-    - name: checkout repo content
-      uses: actions/checkout@v6
     
     - run: pip install -r requirements.txt
 
