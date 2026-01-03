@@ -75,7 +75,7 @@ for q in queries:
 	print(f"found {len(found_repos)} unique repos for query {q}")
 	try:
 		if len(found_repos) > 0:
-			r = requests.post(WEBHOOK, headers={"Content-Type":"application/json"}, data={"content":f"found {len(found_repos)} unique repos for query {q}"})
+			r = requests.post(WEBHOOK, json={"content":f"found {len(found_repos)} unique repos for query {q}"})
 			if r.status_code != 200:
 				print("Bad webhook status code:", r.status_code)
 	except Exception as e:
