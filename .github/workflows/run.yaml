@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: sudo apt install parallel -y 
-    - run: touch ~/.parallel/will-cite
+    - run: mkdir ~/.parallel ; touch ~/.parallel/will-cite
     - name: checkout repo content
       uses: actions/checkout@v2 # checkout the repository content to github runner.
     - uses: actions/setup-python@v6
